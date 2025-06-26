@@ -67,7 +67,17 @@ export async function POST(req: NextRequest) {
       return response1.id;
     };
 
-    
+    const discountCodeData = {
+      code: generateUniqueCode(),
+      value: "20",
+      value_type: "percentage",
+      usage_limit: null,
+      starts_at: new Date(),
+      ends_at: null,
+      applies_to_all_products: true,
+      applies_to_resource: "order",
+      duration: "forever",
+    };
 
     const response = await shop.discountCode.create(
       await getPricerule(),
