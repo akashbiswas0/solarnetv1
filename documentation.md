@@ -4,9 +4,9 @@
 
 The **Registry** contract is the core of the SolarNet platform, managing:
 - Sensor registration and verification
-- SLR (SolarNet Token) balances and trading
+- SNT (SolarNet Token) balances and trading
 - Brand and promotion management
-- Buy/sell/option orders for SLR tokens
+- Buy/sell/option orders for SNT tokens
 - Chainlink integrations for price feeds, automation (keepers), and randomness (VRF)
 
 The contract is designed to be modular, secure, and extensible, leveraging Chainlink's decentralized services for reliable off-chain data and automation.
@@ -20,14 +20,14 @@ The contract is designed to be modular, secure, and extensible, leveraging Chain
 #### 1. **Sensor Management**
 - **Verified Sensors:** Maintains a list of hashed sensor codes that are considered "verified."
 - **Gen Stations:** Maps sensor codes to owner addresses.
-- **Authorized Sensors:** Only authorized addresses can update SLR balances.
+- **Authorized Sensors:** Only authorized addresses can update SNT balances.
 
 #### 2. **Token Balances**
-- **SLR Balances:** Tracks SLR token balances for each user.
+- **SNT Balances:** Tracks SNT token balances for each user.
 - **REC Balances:** Tracks Renewable Energy Certificate balances for brands.
 
 #### 3. **Order System**
-- **Order Struct:** Represents buy/sell/option orders for SLR tokens.
+- **Order Struct:** Represents buy/sell/option orders for SNT tokens.
 - **Order Array:** Stores all orders.
 - **Active Orders:** Tracks currently active order IDs.
 
@@ -59,7 +59,7 @@ flowchart TD
     MockFeed["MockV3Aggregator"]
 
     User1 -- Register Sensor --> Registry
-    User1 -- Update SLR Balance --> Registry
+    User1 -- Update SNT Balance --> Registry
     Brand -- Register as Brand --> Registry
     Brand -- Add Promotion Secret --> Registry
     User1 -- List Order --> Registry
@@ -72,14 +72,14 @@ flowchart TD
 
     subgraph Storage
         Orders["Order Array"]
-        SLR["SLR Balances"]
+        SNT["SNT Balances"]
         RECs["REC Balances"]
         Sensors["Verified Sensors"]
         Brands["Brands"]
     end
 
     Registry -- Reads/Writes --> Orders
-    Registry -- Reads/Writes --> SLR
+    Registry -- Reads/Writes --> SNT
     Registry -- Reads/Writes --> RECs
     Registry -- Reads/Writes --> Sensors
     Registry -- Reads/Writes --> Brands
@@ -90,7 +90,7 @@ flowchart TD
 ## Chainlink Integrations
 
 ### 1. **Price Feeds**
-- **Purpose:** Fetches the latest ETH/USD price for market operations and SLR token pricing.
+- **Purpose:** Fetches the latest ETH/USD price for market operations and SNT token pricing.
 - **Implementation:**
   - Uses `AggregatorV3Interface` to call `latestRoundData()`.
   - Updates `lastEthUsdPrice` and checks for significant price changes.
@@ -119,15 +119,15 @@ flowchart TD
 ### Sensor Registration & Verification
 - **addGenStation:** Registers a sensor code to the sender's address.
 - **checkVerifiedSensors:** Checks if a sensor code is in the verified list.
-- **addAuthorizedSensor:** Admin-only; authorizes an address to update SLR balances.
+- **addAuthorizedSensor:** Admin-only; authorizes an address to update SNT balances.
 
-### SLR Token Management
-- **updateSLRTokenBalance:** Only authorized sensors can update SLR balances for a station.
-- **returnSLRBalance:** Returns the SLR balance for the caller.
+### SNT Token Management
+- **updateSNTTokenBalance:** Only authorized sensors can update SNT balances for a station.
+- **returnSNTBalance:** Returns the SNT balance for the caller.
 
 ### Order System
-- **listOrder:** Lists a new sell/order for SLR tokens.
-- **createBuyOrder:** Fulfills a buy order, transferring SLR tokens and funds.
+- **listOrder:** Lists a new sell/order for SNT tokens.
+- **createBuyOrder:** Fulfills a buy order, transferring SNT tokens and funds.
 - **consumeToken:** Brands can consume tokens, triggering promotions if eligible.
 - **takeOnOption:** Users can take an option on an order.
 - **endOption:** Admin can end an option, returning tokens to the seller.
@@ -151,7 +151,7 @@ flowchart TD
 - **Ownable:** Only the contract owner can add/remove admins.
 - **ReentrancyGuard:** Protects against reentrancy attacks on sensitive functions.
 - **onlyAdmin:** Restricts certain functions to admins or the owner.
-- **onlyAuthorizedSensor:** Restricts SLR balance updates to authorized sensors.
+- **onlyAuthorizedSensor:** Restricts SNT balance updates to authorized sensors.
 
 ---
 
@@ -173,8 +173,8 @@ flowchart TD
 ## Example Usage
 
 1. **Sensor registers and is verified.**
-2. **Sensor updates SLR balance via authorized call.**
-3. **User lists SLR tokens for sale.**
+2. **Sensor updates SNT balance via authorized call.**
+3. **User lists SNT tokens for sale.**
 4. **Brand registers, sets a promotion, and consumes tokens.**
 5. **Chainlink Keepers automatically update price and expire options.**
 6. **Random audits are triggered via Chainlink VRF.**
